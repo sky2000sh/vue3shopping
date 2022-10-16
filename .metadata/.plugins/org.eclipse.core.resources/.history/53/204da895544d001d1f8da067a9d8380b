@@ -15,7 +15,7 @@ public class AccountController {
 	@Autowired
 	MemberRepository memberRepository;
 	
-	// 아래 post로 데이터를 요청받는데, 인자값을 param으로 받고 그 안에 email, password를 던져서 id 값을 리턴해준다.
+	// 아래 post로 데이터를 요청 받는데, 인자값을 param으로 받고 그 안에 email, password를 던져서 id 값을 리턴해준다.
 	@PostMapping("/api/account/login")
 	public int login(@RequestBody Map<String, String> param) {
 		
