@@ -2,9 +2,11 @@ package com.vue3shopping.shopping.controller;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.vue3shopping.shopping.entity.Member;
 import com.vue3shopping.shopping.repository.MemberRepository;
@@ -25,7 +27,7 @@ public class AccountController {
 			return member.getId();
 		}
 		
-		return 0;		
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 	}
 
 }

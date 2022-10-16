@@ -12,7 +12,12 @@
 <script>
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
+import store from './variousScript/store'
 // import Home from './components/pages/Home.vue'
+
+// yarn add axios
+// yarn add vue-router  => main.js + router.js 살펴보기
+// yarn add vuex@next --save  => store.js 살펴보기, 그 후 main.js 살펴보기
 
 export default {
   name: 'App',
@@ -20,7 +25,15 @@ export default {
     Header : Header,
     Footer : Footer,
     // Home : Home,
-  }
+  },
+
+  setup() {
+    const id = sessionStorage.getItem("id")
+
+    if(id) {
+      store.commit("setAccount", id)
+    }
+  },
 }
 </script>
 
