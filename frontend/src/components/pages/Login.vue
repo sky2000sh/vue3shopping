@@ -34,7 +34,7 @@ export default {
             form: {
                 email: "",
                 password: "",
-            },
+            }
         })
 
         const submit = () => {
