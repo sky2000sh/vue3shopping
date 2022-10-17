@@ -10,9 +10,12 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Footer from './components/Footer.vue'
 import Header from './components/Header.vue'
 import store from './variousScript/store'
+import { useRoute } from 'vue-router/dist/vue-router'
+import { watch } from 'vue'
 // import Home from './components/pages/Home.vue'
 
 // yarn add axios
@@ -28,11 +31,29 @@ export default {
   },
 
   setup() {
-    const id = sessionStorage.getItem("id")
-
-    if(id) {
-      store.commit("setAccount", id)
+    const check = () => {
+      axios.get("/api/account/check").then( ({data}) => {
+        console.log('check 메서드의 data :', data)
+        
+        store.commit("setAccount", data || 0)
+        // if(data) {
+        //   store.commit("setAccount", data)
+        // } else {
+        //   store.commit("setAccount", 0)
+        // }
+      })
     }
+
+    // const id = sessionStorage.getItem("id")
+    // if(id) {
+    //   store.commit("setAccount", id)
+    // }
+
+    const route = useRoute()
+
+    watch(route, () => {
+      check()
+    })
   },
 }
 </script>

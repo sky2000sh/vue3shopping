@@ -1,18 +1,24 @@
 package com.vue3shopping.shopping.service;
 
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
+
+import org.springframework.stereotype.Service;
+
 import java.security.Key;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+@Service("JwtService")
 public class JwtServiceImpl implements JwtService {
 	
 	private String secretKey = "aiekdivnbowmfjvifmdjwhdkvn922u4i5#$%kdeji34mekfoivk32%^&&*dkdkdu1j@#";
@@ -39,6 +45,28 @@ public class JwtServiceImpl implements JwtService {
 				.signWith(signKey, SignatureAlgorithm.HS256);
 
 		return builder.compact();
+	}
+
+	@Override
+	public Claims getClaims(String token) {
+		
+		if(token != null && !"".equals(token)) {
+			try {
+				byte[] secretByteKey = DatatypeConverter.parseBase64Binary(secretKey);
+				Key signKey = new SecretKeySpec(secretByteKey, SignatureAlgorithm.HS256.getJcaName());
+				
+				// Claims claims = Jwts.parserBuilder().setSigningKey(signKey).build().parseClaimsJws(token).getBody();
+				// return claims;
+				return Jwts.parserBuilder().setSigningKey(signKey).build().parseClaimsJws(token).getBody();
+			} catch(ExpiredJwtException e) {
+				// 만료되었을 때
+				
+			} catch(JwtException e) {
+				// 유효하지 않을 때
+				
+			}
+		}
+		return null;
 	}
 
 }
