@@ -5,14 +5,14 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity'
+// import { reactive } from '@vue/reactivity'
+import axios from 'axios'
 
 export default {
     setup() {
-        const state = reactive({
+        axios.get("/api/cart/items").then( ({data}) => {
+            console.log('여기가 Cart.vue 의 data :', data)
         })
-
-        return {state}
     },
 }
 </script>

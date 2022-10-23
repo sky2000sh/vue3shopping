@@ -41,6 +41,7 @@ export default {
                 console.log('itemId의 성공')
             })
         }
+
         return {lib, addToCart}
     },
 } 
