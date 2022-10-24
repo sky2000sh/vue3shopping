@@ -33,9 +33,9 @@ public class CartController {
 	
 	// cart 정보를 가져오기
 	@GetMapping("/api/cart/items")
-	public ResponseEntity<Object> getCartItems(@CookieValue(value="token", required = false) String token) {
+	public ResponseEntity<List<Item>> getCartItems(@CookieValue(value="token", required = false) String token) {
 		
-		if(jwtService.isValid(token)) {
+		if(!jwtService.isValid(token)) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
 		
@@ -55,9 +55,9 @@ public class CartController {
 	
 	// cart의 정보를 넣기(push)
 	@PostMapping("/api/cart/items/{itemId}")
-	public ResponseEntity pushCartItem(@PathVariable("itemId") int itemId, @CookieValue(value="token", required = false) String token) {
+	public ResponseEntity<Object> pushCartItem(@PathVariable("itemId") int itemId, @CookieValue(value="token", required = false) String token) {
 		
-		if(jwtService.isValid(token)) {
+		if(!jwtService.isValid(token)) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
 		

@@ -1,5 +1,0 @@
-package com.vue3shopping.shopping.service;
-
-public interface JwtService {
-
-}
