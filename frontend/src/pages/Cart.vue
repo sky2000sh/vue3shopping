@@ -6,17 +6,18 @@
                     <img :src="i.imgPath" />
                     <span class="name"> {{ i.name }} </span>
                     <span class="price"> {{ lib.getNumberFormatted(i.price - i.price * i.discountPer / 100) }}원 </span>
-                    <i class="fa fa-trash"></i>
+                    <i class="fa fa-trash" @click="remove(i.id)"></i>
                 </li>
             </ul>
+            <!-- <button class="btn btn-primary"> 구입하기 </button> -->
+            <router-link to="/order" class="btn btn-primary"> 구입하기 </router-link>
         </div>
     </div>
 </template>
 
 <script>
-// import { reactive } from '@vue/reactivity'
-import axios from 'axios'
 import { reactive } from '@vue/reactivity'
+import axios from 'axios'
 import lib from '@/variousScript/lib'
 
 export default {
@@ -25,12 +26,22 @@ export default {
             items:[]
         })
 
-        axios.get("/api/cart/items").then( ({data}) => {
-            console.log('여기가 Cart.vue 의 data :', data)
-            state.items = data
-        })
+        const load = () => {
+            axios.get("/api/cart/items").then( ({data}) => {
+                console.log('여기가 Cart.vue 의 data :', data)
+                state.items = data
+            })
+        }
 
-        return {state, lib}
+        const remove = (itemId) => {
+            axios.delete(`/api/cart/items/${itemId}`).then( () => {
+                load()
+            })
+        }
+
+        load()
+
+        return {state, lib, remove}
     },
 }
 </script>
@@ -66,5 +77,13 @@ export default {
         font-size: 20px;
         margin-top: 65px;
         margin-right: 50px;
+    }
+
+    .cart .btn {
+        width: 300px;
+        display: block;
+        margin: 0 auto;
+        padding: 30px 50px;
+        font-size: 20px;
     }
 </style>

@@ -104,7 +104,7 @@ As &lt;code&gt;OrderInternal&lt;/code&gt; does not reside in the application mod
 &lt;div class="paragraph"&gt;
 &lt;p&gt;The verification as well as the underlying analysis of the application module model are implemented by using &lt;a href="https://www.archunit.org/"&gt;ArchUnit&lt;/a&gt;.
 It will reject cyclic dependencies between application modules, access to types considered internal (as per the definition above), and, optionally, allow only references to modules explicitly allow-listed by using &lt;code&gt;@ApplicationModule(allowedDependencies = …)&lt;/code&gt; on the application modules &lt;code&gt;package-info.java&lt;/code&gt;.
-For more information on how to define application module boundaries and allowed dependencies between them in the link, see the &lt;a href="https://docs.spring.io/spring-modulith/docs/0.1.0-M1/reference/html/##fundamentals.modules"&gt;reference documentation&lt;/a&gt;.&lt;/p&gt;
+For more information on how to define application module boundaries and allowed dependencies between them in the link, see the &lt;a href="https://docs.spring.io/spring-modulith/docs/0.1.0-M1/reference/html/#fundamentals.modules"&gt;reference documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
