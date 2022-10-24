@@ -32,7 +32,7 @@ public class CartController {
 	ItemRepository itemRepository;
 	
 	// cart 정보를 가져오기
-	@GetMapping("/api/cart/items/")
+	@GetMapping("/api/cart/items")
 	public ResponseEntity<Object> getCartItems(@CookieValue(value="token", required = false) String token) {
 		
 		if(jwtService.isValid(token)) {
@@ -55,7 +55,7 @@ public class CartController {
 	
 	// cart의 정보를 넣기(push)
 	@PostMapping("/api/cart/items/{itemId}")
-	public ResponseEntity<Object> pushCartItem(@PathVariable("itemId") int itemId, @CookieValue(value="token", required = false) String token) {
+	public ResponseEntity pushCartItem(@PathVariable("itemId") int itemId, @CookieValue(value="token", required = false) String token) {
 		
 		if(jwtService.isValid(token)) {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
