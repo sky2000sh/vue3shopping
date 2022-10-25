@@ -32,7 +32,7 @@ export default {
     name: "Card",
 
     props: {
-        item: Object
+        item: Object,
     },
 
     setup() {
