@@ -9,6 +9,11 @@
               <li>
                 <router-link to="/" class="text-white">메인 화면</router-link>
               </li>
+              <!-- 아래 코드는 => 만약 사용자가 로그인을 했으면, -->
+              <li v-if="$store.state.account.id">
+                <router-link to="/orders" class="text-white">주문내역</router-link>
+              </li>
+              <!-- 아래 코드는 => 만약 사용자가 로그아웃을 했거나 / 로그인을 하지 않았다면, -->
               <li>
                 <router-link to="/login" class="text-white"
                             v-if="!$store.state.account.id">

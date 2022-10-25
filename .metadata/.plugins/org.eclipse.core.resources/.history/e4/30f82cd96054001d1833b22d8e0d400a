@@ -1,0 +1,38 @@
+package com.vue3shopping.shopping.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.vue3shopping.shopping.dto.OrderDto;
+import com.vue3shopping.shopping.entity.Order;
+import com.vue3shopping.shopping.service.JwtService;
+
+@RestController
+public class OrderController {
+	
+	@Autowired
+	JwtService jwtService;
+	
+	// cart의 정보를 넣기(push)
+	@PostMapping("/api/orders")
+	public ResponseEntity<Object> pushOrder(@RequestBody OrderDto dto, @CookieValue(value="token", required = false) String token) {
+		
+		if(!jwtService.isValid(token)) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+		}
+		
+		Order order = new Order();
+		order.setMemberId(jwtService.getId(token));
+		order.setName(dto.getName());
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+
+}
