@@ -114,6 +114,7 @@
 import { computed, reactive } from '@vue/reactivity'
 import axios from 'axios'
 import lib from '@/variousScript/lib'
+import router from '@/variousScript/router'
 
 export default {
     setup() {
@@ -141,6 +142,8 @@ export default {
 
             axios.post("/api/orders", args).then( () => {
                 console.log('여기가 Order.vue 의 args')
+                alert('주문 완료했습니다.')
+                router.push({path:"/order"})
             })
         }
 

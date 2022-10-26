@@ -66,4 +66,10 @@ export default {
 </script>
 
 <style scoped>
+    .table {
+        margin-top: 30px;
+    }
+    .table > tbody {
+        border-top: 1px solid #eee;
+    }
 </style>

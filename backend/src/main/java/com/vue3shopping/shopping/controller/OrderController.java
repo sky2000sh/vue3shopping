@@ -1,7 +1,7 @@
 package com.vue3shopping.shopping.controller;
 
 import java.util.List;
-
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.vue3shopping.shopping.dto.OrderDto;
 import com.vue3shopping.shopping.entity.Order;
+import com.vue3shopping.shopping.repository.CartRepository;
 import com.vue3shopping.shopping.repository.OrderRepository;
 import com.vue3shopping.shopping.service.JwtService;
 
@@ -22,6 +23,9 @@ public class OrderController {
 	
 	@Autowired
 	OrderRepository orderRepository;
+	
+	@Autowired
+	CartRepository cartRepository;
 	
 	@Autowired
 	JwtService jwtService;
@@ -33,7 +37,8 @@ public class OrderController {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
 		
-		List<Order> orders = orderRepository.findAll();
+		int memberId = jwtService.getId(token);
+		List<Order> orders = orderRepository.findByMemberIdOrderByIdDesc(memberId);
 		
 		return new ResponseEntity<>(orders, HttpStatus.OK);	
 	}
@@ -42,6 +47,7 @@ public class OrderController {
 	 * 사용자가 입력한 내용을 dto를 담아서, 참조변수 newOrder라는 인스턴스를 생성 후 dto에 get한걸 setter로 만들고
 	 * orderRepository를 통해 저장한다.
 	 */
+	@Transactional
 	@PostMapping("/api/orders")
 	public ResponseEntity<Object> pushOrder(@RequestBody OrderDto dto, @CookieValue(value="token", required = false) String token) {
 		
@@ -49,15 +55,22 @@ public class OrderController {
 			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
 		}
 		
+		int memberId = jwtService.getId(token);
+		
 		Order newOrder = new Order();
-		newOrder.setMemberId(jwtService.getId(token));
+		newOrder.setMemberId(memberId);
 		newOrder.setName(dto.getName());
 		newOrder.setAddress(dto.getAddress());
 		newOrder.setPayment(dto.getPayment());
 		newOrder.setCardNumber(dto.getCardNumber());
 		newOrder.setItems(dto.getItems());
 		
+		// 참조변수 orderRepository안에 새로운 결제를 위해 바구니에 저장
 		orderRepository.save(newOrder);
+		
+		// 참조변수 cartRepository안에 담아두었던 장바구니 정보들을
+		// 결제창으로 넘어감과 동시에 장바구니를 비워준다(삭제)
+		cartRepository.deleteByMemberId(memberId);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

@@ -1,0 +1,73 @@
+package com.vue3shopping.shopping.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.vue3shopping.shopping.dto.OrderDto;
+import com.vue3shopping.shopping.entity.Order;
+import com.vue3shopping.shopping.repository.CartRepository;
+import com.vue3shopping.shopping.repository.OrderRepository;
+import com.vue3shopping.shopping.service.JwtService;
+
+@RestController
+public class OrderController {
+	
+	@Autowired
+	OrderRepository orderRepository;
+	
+	@Autowired
+	CartRepository cartRepository;
+	
+	@Autowired
+	JwtService jwtService;
+	
+	@GetMapping("/api/orders")
+	public ResponseEntity<Object> getOrder(@CookieValue(value="token", required = false) String token) {
+		
+		if(!jwtService.isValid(token)) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+		}
+		
+		List<Order> orders = orderRepository.findAll();
+		
+		return new ResponseEntity<>(orders, HttpStatus.OK);	
+	}
+
+	/* 사용자는 /api/orders 쪽으로 order를 request하면
+	 * 사용자가 입력한 내용을 dto를 담아서, 참조변수 newOrder라는 인스턴스를 생성 후 dto에 get한걸 setter로 만들고
+	 * orderRepository를 통해 저장한다.
+	 */
+	@PostMapping("/api/orders")
+	public ResponseEntity<Object> pushOrder(@RequestBody OrderDto dto, @CookieValue(value="token", required = false) String token) {
+		
+		if(!jwtService.isValid(token)) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+		}
+		
+		int memberId = jwtService.getId(token);
+		
+		Order newOrder = new Order();
+		newOrder.setMemberId(memberId);
+		newOrder.setName(dto.getName());
+		newOrder.setAddress(dto.getAddress());
+		newOrder.setPayment(dto.getPayment());
+		newOrder.setCardNumber(dto.getCardNumber());
+		newOrder.setItems(dto.getItems());
+		
+		orderRepository.save(newOrder);
+		cartRepository.deleteByMemberId(memberId);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+
+}

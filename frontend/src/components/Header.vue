@@ -34,7 +34,7 @@
           <strong>Shopping & Tour</strong>
         </router-link>
 
-        <router-link to="/cart" class="cart btn">
+        <router-link to="/cart" class="cart btn" v-if="$store.state.account.id">
           <i class="fa fa-shopping-cart" aria-hidden="true"></i>
         </router-link>
 
@@ -49,6 +49,7 @@
 <script>
 import store from '@/variousScript/store'
 import router from '@/variousScript/router'
+import axios from 'axios'
 
 // 22년 10월 16일 vuex 설치
 // 터미널에 yarn add vuex@next --save 명령어 입력
@@ -58,9 +59,11 @@ export default {
   setup() {
 
     const logout = () => {
-      store.commit('setAccount', 0)
-      sessionStorage.removeItem("id")
-      router.push({path: "/"})
+      axios.post("/api/account/logout").then( () => {
+        store.commit('setAccount', 0)
+        // sessionStorage.removeItem("id")
+        router.push({path: "/"})
+      }) 
     }
 
     return {logout}
@@ -69,6 +72,10 @@ export default {
 </script>
 
 <style scoped>
+  header ul li a {
+    cursor: pointer;
+  }
+
   header .navbar .cart {
     margin-left: auto;
     color: #fff;
