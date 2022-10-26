@@ -39,7 +39,7 @@ import lib from '@/variousScript/lib'
 export default {
     setup() {
         const state = reactive({
-            orders:[],
+            orders:[]
         })
 
         axios.get('/api/orders').then( ({data}) => {
